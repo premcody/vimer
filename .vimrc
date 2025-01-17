@@ -1,0 +1,24 @@
+set nu
+syntax on
+set encoding=utf-8
+set tabstop=2
+set shiftwidth=2
+set expandtab
+set smarttab
+set autoindent
+set nowrap
+set smartcase
+set showmatch
+set title
+set ruler
+set et
+set number relativenumber
+set scrolloff=4
+set incsearch
+set hlsearch
+set autoread
+set autowrite
+set nobackup
+set nowritebackup
+set noswapfile
+set nocompatible
