@@ -13,6 +13,11 @@ tnoremap <Esc> <C-w>N
 let &t_SI = "\e[6 q"  " Set cursor to vertical bar in Insert mode
 let &t_EI = "\e[2 q"  " Set cursor to block in Normal mode
 let &t_SR = "\e[4 q"  " Set cursor to underline in Replace mode
+" netrw customization - hide files, no help banner and also tree style
+" directory
+let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+'
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
 
 set tabline=%!MyTabLine()
 set nu
@@ -42,6 +47,8 @@ set nocompatible
 set splitbelow
 set wildignorecase
 set path+=**
+set cursorline
+set cursorcolumn
 
 " Add the Vim plug for installing all extenstions:this should be the 1st step
 " After adding, run the command :PlugInstall
@@ -100,5 +107,8 @@ endfunction
 highlight TabLine      ctermfg=Black ctermbg=Gray   guifg=Black guibg=Gray
 highlight TabLineSel   ctermfg=White ctermbg=Blue   guifg=White guibg=Blue
 highlight TabLineFill  ctermfg=Black ctermbg=Gray   guifg=Black guibg=Gray
+highlight CursorLine cterm=underline ctermfg=NONE ctermbg=NONE gui=underline guifg=NONE guibg=NONE
+" below is the vertical line you see in the screen
+highlight CursorColumn ctermbg=Blue guibg=#0000FF
 
-autocmd BufWritePre * normal gg=G
+" autocmd BufWritePre * normal gg=G
