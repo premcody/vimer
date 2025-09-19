@@ -1,13 +1,3 @@
-
-" Mapping keys
-nnoremap <Up> 5k 
-nnoremap <Down> 5j
-" Search director search
-nnoremap @ :execute 'vimgrep /' . expand('<cword>') . '/ **'<CR>:copen<CR>
-inoremap { {}<Left>
-" Map Escape to switch to terminal normal mode (equivalent to Ctrl-w N)
-tnoremap <Esc> <C-w>N
-
 "" cursor customization
 " Change cursor shape in different modes
 let &t_SI = "\e[6 q"  " Set cursor to vertical bar in Insert mode
@@ -18,7 +8,10 @@ let &t_SR = "\e[4 q"  " Set cursor to underline in Replace mode
 let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+'
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
+let g:netrw_localmovecmd = "mv"
 
+
+set termguicolors
 set tabline=%!MyTabLine()
 set nu
 syntax on
@@ -48,30 +41,52 @@ set splitbelow
 set wildignorecase
 set path+=**
 set cursorline
-set cursorcolumn
+set nocursorcolumn
+let g:rustfmt_autosave = 1
 
-" Add the Vim plug for installing all extenstions:this should be the 1st step
-" After adding, run the command :PlugInstall
-
-let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-if empty(glob(data_dir . '/autoload/plug.vim'))
-  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
-
-" Start adding the plugins here , start with coc i.e conquer of completion
-call plug#begin()
-
-" List your plugins here
-
+call plug#begin('~/.vim/plugged')
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'eclipse/eclipse.jdt.ls'
+Plug 'rust-lang/rust.vim'
 call plug#end()
 
-let g:markdown_fenced_languages = ['html', 'java', 'c', 'vim']
+" Use <c-space> to trigger completion
+inoremap <silent><expr> <c-space> coc#refresh()
 
-let g:netrw_bufsettings = 'noma nomod nu rnu nobl nowrap ro'
+" Go to definition, references, etc.
+" nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gd :call CocAction('jumpDefinition', 'tab drop')<CR>
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+
+" normal mode mappings
+nnoremap <C-P> :let @a=expand('%:p')<CR>
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+highlight CursorLine cterm=underline ctermfg=None ctermbg=NONE gui=underline guifg=Blue guibg=NONE
+
+" remember the annoying backgroud grey highligh for the inlay hint for the rust types..this is it
+highlight CocInlayHint guifg=#888888 guibg=NONE gui=italic ctermfg=244 ctermbg=NONE cterm=italic
+
+" highlight the tabs which are inactive
+highlight TabLine guibg=#1e1e1e guifg=#83a598 ctermbg=234 ctermfg=109
+
+
 
 function! MyTabLine()
   let s = ''
@@ -104,11 +119,4 @@ function! MyTabLine()
   return s
 endfunction
 
-highlight TabLine      ctermfg=Black ctermbg=Gray   guifg=Black guibg=Gray
-highlight TabLineSel   ctermfg=White ctermbg=Blue   guifg=White guibg=Blue
-highlight TabLineFill  ctermfg=Black ctermbg=Gray   guifg=Black guibg=Gray
-highlight CursorLine cterm=underline ctermfg=NONE ctermbg=NONE gui=underline guifg=NONE guibg=NONE
-" below is the vertical line you see in the screen
-highlight CursorColumn ctermbg=Blue guibg=#0000FF
 
-" autocmd BufWritePre * normal gg=G
